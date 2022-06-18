@@ -1,6 +1,6 @@
 package me.maploop.cleria;
 
-import me.maploop.cleria.object.Entity;
+import me.maploop.cleria.entity.Entity;
 
 public class CollisionChecker
 {

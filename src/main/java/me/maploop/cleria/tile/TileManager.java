@@ -2,7 +2,7 @@ package me.maploop.cleria.tile;
 
 import me.maploop.cleria.GamePanel;
 import me.maploop.cleria.helper.AssetHelper;
-import me.maploop.cleria.object.Entity;
+import me.maploop.cleria.entity.Entity;
 
 import java.awt.*;
 import java.io.BufferedReader;

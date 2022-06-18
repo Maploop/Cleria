@@ -1,6 +1,6 @@
 package me.maploop.cleria;
 
-import me.maploop.cleria.object.objects.Player;
+import me.maploop.cleria.entity.objects.Player;
 
 import javax.swing.*;
 
@@ -20,6 +20,7 @@ public class Cleria
         window.pack();
         window.setVisible(true);
 
+        panel.setupGameObjects();
         panel.startGameThread();
     }
 

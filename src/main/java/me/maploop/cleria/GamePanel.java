@@ -1,7 +1,9 @@
 package me.maploop.cleria;
 
+import me.maploop.cleria.helper.AssetHelper;
 import me.maploop.cleria.key.KeyHandler;
-import me.maploop.cleria.object.Entity;
+import me.maploop.cleria.entity.Entity;
+import me.maploop.cleria.object.SuperObject;
 import me.maploop.cleria.tile.TileManager;
 
 import javax.swing.*;
@@ -35,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable
     public static Thread gameThread;
     public static CollisionChecker collisionChecker = new CollisionChecker();
     public static TileManager tileManager = new TileManager();
-
+    public static SuperObject object[] = new SuperObject[10];
     //
 
     public GamePanel() {
@@ -49,6 +51,10 @@ public class GamePanel extends JPanel implements Runnable
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
+    }
+
+    public void setupGameObjects() {
+        AssetHelper.setObject();
     }
 
     @Override
@@ -91,6 +97,10 @@ public class GamePanel extends JPanel implements Runnable
         Graphics2D g2d = (Graphics2D) g;
         tileManager.draw(g2d);
         Entity.gameObjectRegistry.values().forEach(e -> e.draw(g2d));
+        for (SuperObject objects : object) {
+            if (objects == null) continue;
+            objects.draw(g2d);
+        }
 
         if (drawFps) {
             g2d.setColor(Color.white);

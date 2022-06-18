@@ -1,6 +1,6 @@
 package me.maploop.cleria.key;
 
-import me.maploop.cleria.object.Entity;
+import me.maploop.cleria.entity.Entity;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

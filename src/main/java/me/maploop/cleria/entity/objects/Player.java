@@ -1,7 +1,7 @@
-package me.maploop.cleria.object.objects;
+package me.maploop.cleria.entity.objects;
 
 import me.maploop.cleria.GamePanel;
-import me.maploop.cleria.object.Entity;
+import me.maploop.cleria.entity.Entity;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -31,13 +31,13 @@ public class Player extends Entity
             collisionOn = false;
             GamePanel.collisionChecker.checkTile(this);
             if (!collisionOn) {
-                if (direction.equals("up"))
+                if (up)
                     setWorldY(getWorldY() - getSpeed());
-                if (direction.equals("down"))
+                if (down)
                     setWorldY(getWorldY() + getSpeed());
-                if (direction.equals("left"))
+                if (left)
                     setWorldX(getWorldX() - getSpeed());
-                if (direction.equals("right"))
+                if (right)
                     setWorldX(getWorldX() + getSpeed());
             }
 

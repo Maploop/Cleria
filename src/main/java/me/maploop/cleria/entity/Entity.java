@@ -1,4 +1,4 @@
-package me.maploop.cleria.object;
+package me.maploop.cleria.entity;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
