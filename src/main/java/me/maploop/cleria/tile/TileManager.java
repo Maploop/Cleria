@@ -25,12 +25,52 @@ public class TileManager
     }
 
     public void getTileImage() {
-        tile.put(0, new Tile(AssetHelper.asset("/assets/tiles/grass.png")));
+        tile.put(0, new Tile(AssetHelper.asset("/assets/tiles/grass00.png")));
         tile.put(1, new Tile(AssetHelper.asset("/assets/tiles/wall.png")).collision(true));
         tile.put(2, new Tile(AssetHelper.asset("/assets/tiles/water.png")));
         tile.put(3, new Tile(AssetHelper.asset("/assets/tiles/earth.png")));
         tile.put(4, new Tile(AssetHelper.asset("/assets/tiles/tree.png")).collision(true));
-        tile.put(5, new Tile(AssetHelper.asset("/assets/tiles/sand.png")));
+        tile.put(6, new Tile(AssetHelper.asset("/assets/tiles/sand.png")));
+        tile.put(7, new Tile(AssetHelper.asset("/assets/tiles/sand.png")));
+        tile.put(8, new Tile(AssetHelper.asset("/assets/tiles/sand.png")));
+        tile.put(9, new Tile(AssetHelper.asset("/assets/tiles/sand.png")));
+
+        setup(10, "grass00", false);
+        setup(11, "grass01", false);
+        setup(12, "water00", true);
+        setup(13, "water01", true);
+        setup(14, "water02", true);
+        setup(15, "water03", true);
+        setup(16, "water04", true);
+        setup(17, "water05", true);
+        setup(18, "water06", true);
+        setup(19, "water07", true);
+        setup(20, "water08", true);
+        setup(21, "water09", true);
+        setup(22, "water10", true);
+        setup(23, "water11", true);
+        setup(24, "water12", true);
+        setup(25, "water13", true);
+        setup(26, "road00", false);
+        setup(27, "road01", false);
+        setup(28, "road02", false);
+        setup(29, "road03", false);
+        setup(30, "road04", false);
+        setup(31, "road05", false);
+        setup(32, "road06", false);
+        setup(33, "road07", false);
+        setup(34, "road08", false);
+        setup(35, "road09", false);
+        setup(36, "road10", false);
+        setup(37, "road11", false);
+        setup(38, "road12", false);
+        setup(39, "earth", false);
+        setup(40, "wall", true);
+        setup(41, "tree", true);
+    }
+
+    public void setup(int i, String s, boolean collision) {
+        tile.put(i, new Tile(AssetHelper.asset("/assets/tiles/" + s + ".png")).collision(collision));
     }
 
     public void draw(Graphics2D g2d) {

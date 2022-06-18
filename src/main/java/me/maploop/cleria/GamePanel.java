@@ -29,7 +29,7 @@ public class GamePanel extends JPanel implements Runnable
     // Settings end
 
     // World Settings
-    public static final String levelName = "world01";
+    public static final String levelName = "worldV2";
     public static final int maxWorldCol = 50;
     public static final int maxWorldRow = 50;
     public static final int worldWidth = tileSize * maxWorldCol;
@@ -38,10 +38,13 @@ public class GamePanel extends JPanel implements Runnable
     public int fps = 0;
 
     public static KeyHandler keyHandler = new KeyHandler();
+    public static Sound sound = new Sound();
+    public static Sound se = new Sound();
     public static Thread gameThread;
     public static CollisionChecker collisionChecker = new CollisionChecker();
     public static TileManager tileManager = new TileManager();
     public static SuperObject object[] = new SuperObject[10];
+    public static UI ui = new UI();
 
     public static boolean chatOpen = false;
     public static String chatMessage = "";
@@ -61,6 +64,7 @@ public class GamePanel extends JPanel implements Runnable
 
     public void setupGameObjects() {
         AssetHelper.setObject();
+        playMusic("cleria");
     }
 
     @Override
@@ -129,7 +133,7 @@ public class GamePanel extends JPanel implements Runnable
         }
         if (!chatmessages.isEmpty()) {
             int x = 10;
-            AtomicInteger y = new AtomicInteger(50);
+            AtomicInteger y = new AtomicInteger(80);
             Map<ChatComponent, Long> cached = new HashMap<>(chatmessages);
             cached.forEach((k, v) -> {
                 if (v <= System.currentTimeMillis()) {
@@ -144,5 +148,21 @@ public class GamePanel extends JPanel implements Runnable
                 y.addAndGet(20);
             });
         }
+        ui.draw(g2d);
+    }
+
+    public static void playMusic(String i) {
+        sound.setFile(i);
+        sound.play();
+        sound.loop();
+    }
+
+    public static void playSFX(String i) {
+        se.setFile(i);
+        se.play();
+    }
+
+    public static void stopMusic() {
+        sound.stop();
     }
 }

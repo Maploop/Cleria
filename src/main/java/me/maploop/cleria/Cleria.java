@@ -4,6 +4,7 @@ import me.maploop.cleria.entity.objects.Player;
 import me.maploop.cleria.helper.AssetHelper;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -44,6 +45,8 @@ public class Cleria
                 GamePanel.collisionChecker.dragMouse(e.getX(), e.getY());
             }
         });
+
+        GamePanel.chat("Welcome to Cleria", Color.magenta);
     }
 
     private void registerGameObjects() {

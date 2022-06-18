@@ -8,5 +8,6 @@ public class ChestObj extends SuperObject
     public ChestObj() {
         name = "chest";
         image = AssetHelper.asset("/assets/object/chest.png");
+        collision = true;
     }
 }

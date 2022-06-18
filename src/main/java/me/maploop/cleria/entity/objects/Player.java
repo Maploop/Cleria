@@ -1,6 +1,7 @@
 package me.maploop.cleria.entity.objects;
 
 import me.maploop.cleria.GamePanel;
+import me.maploop.cleria.UI;
 import me.maploop.cleria.entity.Entity;
 import me.maploop.cleria.item.Item;
 import me.maploop.cleria.object.SuperObject;
@@ -16,7 +17,7 @@ import static me.maploop.cleria.helper.AssetHelper.asset;
 public class Player extends Entity
 {
     private boolean up, down, left, right;
-    private int keys;
+    public static int keys;
 
     public Player() {
         super("cleria", (GamePanel.screenWidth / 2) - GamePanel.tileSize / 2, (GamePanel.screenHeight / 2) - GamePanel.tileSize - 2,
@@ -153,15 +154,29 @@ public class Player extends Entity
             case "key":
                 keys++;
                 GamePanel.object[index] = null;
+                GamePanel.playSFX("coin");
+                GamePanel.chat("You got a key!", Color.yellow);
                 break;
             case "door":
                 if (keys >= 1) {
                     GamePanel.object[index] = null;
                     keys--;
                     GamePanel.chat("Door unlocked!", Color.green);
+                    GamePanel.playSFX("unlock");
                 } else {
                     GamePanel.chat("You need a key to open this door!", Color.red);
                 }
+                break;
+            case "boots":
+                GamePanel.chat("You found a pair of boots!", Color.cyan);
+                speed += 2;
+                GamePanel.object[index] = null;
+                GamePanel.playSFX("powerup");
+                break;
+            case "chest":
+                UI.gameFinished = true;
+                GamePanel.stopMusic();
+                GamePanel.playSFX("fanfare");
                 break;
         }
     }
