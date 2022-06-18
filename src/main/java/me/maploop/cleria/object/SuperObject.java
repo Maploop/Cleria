@@ -12,6 +12,34 @@ public abstract class SuperObject
     public String name;
     public boolean collision = false;
     public int worldX, worldY;
+    public Rectangle hitbox = new Rectangle(0, 0, 48, 48);
+    public int hitboxDefaultX = 0, hitboxDefaultY = 0;
+    public String tooltips;
+
+    public boolean mouseIn;
+
+    public boolean displayTooltips;
+    public int tooltipsX, tooltipsY;
+
+    public void interact() { }
+
+
+    public void drag(int mouseX, int mouseY) {
+        tooltipsX = mouseX;
+        tooltipsY = mouseY;
+    }
+
+    public void mouseEnter() {
+        System.out.println("entered " + name);
+        displayTooltips = true;
+        mouseIn = true;
+    }
+
+    public void mouseExit() {
+        System.out.println("exited " + name);
+        displayTooltips = false;
+        mouseIn = false;
+    }
 
     public void draw(Graphics2D g2d) {
         int screenX = worldX - Entity.getByName("cleria").getWorldX() + Entity.getByName("cleria").getX();

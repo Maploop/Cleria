@@ -8,5 +8,6 @@ public class DoorObj extends SuperObject
     public DoorObj() {
         name = "door";
         image = AssetHelper.asset("/assets/object/door_close.png");
+        collision = true;
     }
 }

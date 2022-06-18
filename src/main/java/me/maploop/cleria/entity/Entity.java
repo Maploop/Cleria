@@ -1,5 +1,7 @@
 package me.maploop.cleria.entity;
 
+import me.maploop.cleria.object.SuperObject;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -9,10 +11,11 @@ public abstract class Entity
 {
     public static final Map<String, Entity> gameObjectRegistry = new HashMap<>();
 
-    private final String name;
-    private int x, y;
-    private int worldX, worldY;
-    private int speed;
+    public final String name;
+    public int x, y;
+    public int worldX, worldY;
+    public int speed;
+    public int hitboxDefaultX, hitboxDefaultY;
 
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
     public String direction;
@@ -41,6 +44,7 @@ public abstract class Entity
     public void keyReleased(int code) { }
     public void tick() { }
     public void getImage() { }
+    public void touchObject(int index) { }
 
     public String getName() {
         return name;

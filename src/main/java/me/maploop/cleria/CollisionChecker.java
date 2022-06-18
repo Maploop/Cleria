@@ -1,6 +1,9 @@
 package me.maploop.cleria;
 
 import me.maploop.cleria.entity.Entity;
+import me.maploop.cleria.object.SuperObject;
+
+import java.awt.*;
 
 public class CollisionChecker
 {
@@ -54,6 +57,101 @@ public class CollisionChecker
                     e.collisionOn = true;
                 }
                 break;
+        }
+    }
+
+    public int checkObject(Entity e, boolean player) {
+        int index = 999;
+
+        for (int i = 0; i < GamePanel.object.length; i++) {
+            if (GamePanel.object[i] == null) continue;
+            e.hitbox.x = e.worldX + e.hitbox.x;
+            e.hitbox.y = e.worldY + e.hitbox.y;
+            SuperObject object = GamePanel.object[i];
+            object.hitbox.x = object.worldX + object.hitbox.x;
+            object.hitbox.y = object.worldY + object.hitbox.y;
+
+            switch (e.direction) {
+                case "up":
+                    e.hitbox.y -= e.speed;
+                    if (e.hitbox.intersects(object.hitbox) && object.collision) {
+                        e.collisionOn = true;
+                        if (player)
+                            index = i;
+                    }
+                    break;
+                case "down":
+                    e.hitbox.y += e.speed;
+                    if (e.hitbox.intersects(object.hitbox) && object.collision) {
+                        e.collisionOn = true;
+                        if (player)
+                            index = i;
+                    }
+                    break;
+                case "left":
+                    e.hitbox.x -= e.speed;
+                    if (e.hitbox.intersects(object.hitbox) && object.collision) {
+                        e.collisionOn = true;
+                        if (player)
+                            index = i;
+                    }
+                    break;
+                case "right":
+                    e.hitbox.x += e.speed;
+                    if (e.hitbox.intersects(object.hitbox) && object.collision) {
+                        e.collisionOn = true;
+                        if (player)
+                            index = i;
+                    }
+                    break;
+            }
+
+            e.hitbox.x = e.hitboxDefaultX;
+            e.hitbox.y = e.hitboxDefaultY;
+            object.hitbox.x = object.hitboxDefaultX;
+            object.hitbox.y = object.hitboxDefaultY;
+        }
+
+        return index;
+    }
+
+    public void clickMouse(int x, int y) {
+        for (SuperObject o : GamePanel.object) {
+            if (o == null) continue;
+            if (o.hitbox.contains(x, y)) {
+                System.out.println("interacting with " + o.name);
+                o.interact();
+            }
+        }
+    }
+
+    public void dragMouse(int x, int y) {
+        for (SuperObject o : GamePanel.object) {
+            if (o == null) continue;
+            if (o.hitbox.contains(x, y)) {
+                o.drag(x, y);
+                if (!o.mouseIn)
+                    o.mouseEnter();
+            } else {
+                if (o.mouseIn)
+                    o.mouseExit();
+            }
+        }
+    }
+
+    public void enterMouse(int x, int y) {
+        for (SuperObject o : GamePanel.object) {
+            if (o.hitbox.intersects(new Rectangle(x, y, 10, 10))) {
+                o.mouseEnter();
+            }
+        }
+    }
+
+    public void exitMouse(int x, int y) {
+        for (SuperObject o : GamePanel.object) {
+            if (o.hitbox.intersects(new Rectangle(x, y, 10, 10))) {
+                o.mouseExit();
+            }
         }
     }
 }

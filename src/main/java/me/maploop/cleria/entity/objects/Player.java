@@ -2,16 +2,21 @@ package me.maploop.cleria.entity.objects;
 
 import me.maploop.cleria.GamePanel;
 import me.maploop.cleria.entity.Entity;
+import me.maploop.cleria.item.Item;
+import me.maploop.cleria.object.SuperObject;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import static me.maploop.cleria.helper.AssetHelper.asset;
 
 public class Player extends Entity
 {
     private boolean up, down, left, right;
+    private int keys;
 
     public Player() {
         super("cleria", (GamePanel.screenWidth / 2) - GamePanel.tileSize / 2, (GamePanel.screenHeight / 2) - GamePanel.tileSize - 2,
@@ -21,6 +26,10 @@ public class Player extends Entity
         this.hitbox.y = 16;
         this.hitbox.width = 32;
         this.hitbox.height = 32;
+        this.hitboxDefaultX = hitbox.x;
+        this.hitboxDefaultY = hitbox.y;
+
+        keys = 0;
     }
 
     @Override
@@ -30,6 +39,10 @@ public class Player extends Entity
             // Check tile collision
             collisionOn = false;
             GamePanel.collisionChecker.checkTile(this);
+            int objectIndex = GamePanel.collisionChecker.checkObject(this, true);
+            if (objectIndex != 999)
+                touchObject(objectIndex);
+
             if (!collisionOn) {
                 if (up)
                     setWorldY(getWorldY() - getSpeed());
@@ -131,5 +144,29 @@ public class Player extends Entity
                 break;
         }
         g2d.drawImage(image, getX(), getY(), GamePanel.tileSize, GamePanel.tileSize, null);
+    }
+
+    @Override
+    public void touchObject(int index) {
+        String name = GamePanel.object[index].name;
+        switch (name) {
+            case "key":
+                keys++;
+                GamePanel.object[index] = null;
+                break;
+            case "door":
+                if (keys >= 1) {
+                    GamePanel.object[index] = null;
+                    keys--;
+                    GamePanel.chat("Door unlocked!", Color.green);
+                } else {
+                    GamePanel.chat("You need a key to open this door!", Color.red);
+                }
+                break;
+        }
+    }
+
+    public int getKeys() {
+        return keys;
     }
 }

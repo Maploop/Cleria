@@ -4,6 +4,8 @@ import me.maploop.cleria.entity.objects.Player;
 import me.maploop.cleria.helper.AssetHelper;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Cleria
 {
@@ -24,6 +26,24 @@ public class Cleria
 
         panel.setupGameObjects();
         panel.startGameThread();
+
+        window.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                GamePanel.collisionChecker.clickMouse(e.getX(), e.getY());
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                GamePanel.collisionChecker.dragMouse(e.getX(), e.getY());
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                GamePanel.collisionChecker.dragMouse(e.getX(), e.getY());
+            }
+        });
     }
 
     private void registerGameObjects() {

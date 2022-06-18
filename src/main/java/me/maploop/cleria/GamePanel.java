@@ -1,6 +1,7 @@
 package me.maploop.cleria;
 
 import me.maploop.cleria.helper.AssetHelper;
+import me.maploop.cleria.helper.ChatComponent;
 import me.maploop.cleria.key.KeyHandler;
 import me.maploop.cleria.entity.Entity;
 import me.maploop.cleria.object.SuperObject;
@@ -8,6 +9,9 @@ import me.maploop.cleria.tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GamePanel extends JPanel implements Runnable
 {
@@ -38,7 +42,9 @@ public class GamePanel extends JPanel implements Runnable
     public static CollisionChecker collisionChecker = new CollisionChecker();
     public static TileManager tileManager = new TileManager();
     public static SuperObject object[] = new SuperObject[10];
-    //
+
+    public static boolean chatOpen = false;
+    public static String chatMessage = "";
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -87,6 +93,15 @@ public class GamePanel extends JPanel implements Runnable
         }
     }
 
+    private static Map<ChatComponent, Long> chatmessages = new HashMap<>();
+    public static void chat(String msg) {
+        chatmessages.put(new ChatComponent(msg, Color.white), System.currentTimeMillis() + 3000);
+    }
+
+    public static void chat(String msg, Color c) {
+        chatmessages.put(new ChatComponent(msg, c), System.currentTimeMillis() + 3000);
+    }
+
     public void update() {
         Entity.gameObjectRegistry.values().forEach(Entity::tick);
     }
@@ -105,6 +120,29 @@ public class GamePanel extends JPanel implements Runnable
         if (drawFps) {
             g2d.setColor(Color.white);
             g2d.drawString("FPS: " + fps, 10, 20);
+        }
+        if (chatOpen) {
+            g2d.setColor(new Color(0, 0, 0, 100));
+            g2d.fillRect(0, getHeight() - 20, getWidth(), 20);
+            g2d.setColor(Color.white);
+            g2d.drawString("> " + chatMessage, 10, getHeight() - 5);
+        }
+        if (!chatmessages.isEmpty()) {
+            int x = 10;
+            AtomicInteger y = new AtomicInteger(50);
+            Map<ChatComponent, Long> cached = new HashMap<>(chatmessages);
+            cached.forEach((k, v) -> {
+                if (v <= System.currentTimeMillis()) {
+                    chatmessages.remove(k);
+                    return;
+                }
+
+                g2d.setColor(new Color(0, 0, 0, 100));
+                g2d.fillRect(x, y.get(), 300, 20);
+                g2d.setColor(k.color);
+                g2d.drawString(k.chat, x + 10, y.get() + 15);
+                y.addAndGet(20);
+            });
         }
     }
 }
