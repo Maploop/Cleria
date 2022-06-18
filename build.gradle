@@ -14,6 +14,14 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
 
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart',
+                'Implementation-Version': version,
+                'Main-Class': 'me.maploop.cleria.Cleria'
+    }
+}
+
 test {
     useJUnitPlatform()
 }

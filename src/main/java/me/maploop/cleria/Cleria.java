@@ -1,6 +1,7 @@
 package me.maploop.cleria;
 
 import me.maploop.cleria.entity.objects.Player;
+import me.maploop.cleria.helper.AssetHelper;
 
 import javax.swing.*;
 
@@ -12,6 +13,7 @@ public class Cleria
         window.setResizable(false);
         window.setTitle("Cleria");
         window.setLocationRelativeTo(null);
+        window.setIconImage(AssetHelper.asset("/assets/icon/cleria.png"));
         registerGameObjects();
 
         GamePanel panel = new GamePanel();
