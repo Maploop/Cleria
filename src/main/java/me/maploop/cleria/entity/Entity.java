@@ -197,13 +197,12 @@ public abstract class Entity
     }
 
     public void speak() {
-        DialogueUI.currentDialogue = dialogues.get(dialogueIndex);
-        if (dialogueIndex != dialogues.size() - 1)
-            dialogueIndex++;
-        else {
-//            Player.dontApplyDialogue = true;
-            dialogueIndex = 0;
+        try {
             DialogueUI.currentDialogue = dialogues.get(dialogueIndex);
+            dialogueIndex++;
+        } catch (IndexOutOfBoundsException e) {
+            dialogueIndex = 0;
+            Player.dontApplyDialogue = true;
         }
 
         Player player = (Player) Entity.getByName("cleria");

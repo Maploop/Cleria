@@ -22,6 +22,7 @@ import static me.maploop.cleria.helper.AssetHelper.asset;
 public class Player extends Entity
 {
     public static boolean dontApplyDialogue;
+    public static int dontApplyDialogueC;
     public static boolean enterPressed;
     private boolean up, down, left, right;
 
@@ -41,24 +42,23 @@ public class Player extends Entity
     // TODO: MAKE THE ENTER PRESS THING
     @Override
     public void tick() {
+        // Check tile collision
+        collisionOn = false;
+        GamePanel.collisionChecker.checkTile(this);
+        int objectIndex = GamePanel.collisionChecker.checkObject(this, true);
+        if (objectIndex != 999)
+            touchObject(objectIndex);
+
+        List<Entity> entities = new ArrayList<>(entityList);
+        entities.remove(this);
+        String collided = GamePanel.collisionChecker.checkEntity(this, entities.toArray(new Entity[0]));
+        if (!collided.equals("none"))
+            touchEntity(collided);
+
+        GamePanel.eventHandler.checkEvent();
+        enterPressed = false;
+
         if (up || down || left || right) {
-
-            // Check tile collision
-            collisionOn = false;
-            GamePanel.collisionChecker.checkTile(this);
-            int objectIndex = GamePanel.collisionChecker.checkObject(this, true);
-            if (objectIndex != 999)
-                touchObject(objectIndex);
-
-            List<Entity> entities = new ArrayList<>(entityList);
-            entities.remove(this);
-            String collided = GamePanel.collisionChecker.checkEntity(this, entities.toArray(new Entity[0]));
-            if (!collided.equals("none"))
-                touchEntity(collided);
-
-            GamePanel.eventHandler.checkEvent();
-            enterPressed = false;
-
             if (!collisionOn) {
                 if (up)
                     setWorldY(getWorldY() - getSpeed());
@@ -86,6 +86,14 @@ public class Player extends Entity
             if (invincibleCounter >= 60) {
                 invincible = false;
                 invincibleCounter = 0;
+            }
+        }
+
+        if (dontApplyDialogue) {
+            dontApplyDialogueC++;
+            if (dontApplyDialogueC >= 60) {
+                dontApplyDialogue = false;
+                dontApplyDialogueC = 0;
             }
         }
     }
@@ -195,14 +203,16 @@ public class Player extends Entity
     public void touchEntity(String name) {
         Entity entity = Entity.getByName(name);
         if (entity.npc) {
-            if (enterPressed) {
-                up = false;
-                down = false;
-                left = false;
-                right = false;
+            if (!dontApplyDialogue) {
+                if (enterPressed) {
+                    up = false;
+                    down = false;
+                    left = false;
+                    right = false;
 
-                GamePanel.gameState = GameState.DIALOGUE;
-                entity.speak();
+                    GamePanel.gameState = GameState.DIALOGUE;
+                    entity.speak();
+                }
             }
         }
         if (entity instanceof MonsterEntity) {
