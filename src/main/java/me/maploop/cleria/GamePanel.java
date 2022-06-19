@@ -6,6 +6,9 @@ import me.maploop.cleria.key.KeyHandler;
 import me.maploop.cleria.entity.Entity;
 import me.maploop.cleria.object.SuperObject;
 import me.maploop.cleria.tile.TileManager;
+import me.maploop.cleria.ui.DialogueUI;
+import me.maploop.cleria.ui.GameUI;
+import me.maploop.cleria.ui.PausedUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class GamePanel extends JPanel implements Runnable
 {
+    public static GamePanel INSTANCE;
+
     // Settings
     public static final int originalTileSize = 16;
     public static final int scale = 3;
@@ -45,9 +50,14 @@ public class GamePanel extends JPanel implements Runnable
     public static TileManager tileManager = new TileManager();
     public static SuperObject object[] = new SuperObject[10];
     public static UI ui = new UI();
+    public static int gameState;
 
     public static boolean chatOpen = false;
     public static String chatMessage = "";
+
+    public static final int PLAYING = 1;
+    public static final int PAUSED = 2;
+    public static final int DIALOGUE = 3;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -55,6 +65,7 @@ public class GamePanel extends JPanel implements Runnable
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+        INSTANCE = this;
     }
 
     public void startGameThread() {
@@ -65,6 +76,11 @@ public class GamePanel extends JPanel implements Runnable
     public void setupGameObjects() {
         AssetHelper.setObject();
         playMusic("cleria");
+
+        new PausedUI();
+        new DialogueUI();
+
+        gameState = PLAYING;
     }
 
     @Override
@@ -107,7 +123,12 @@ public class GamePanel extends JPanel implements Runnable
     }
 
     public void update() {
-        Entity.gameObjectRegistry.values().forEach(Entity::tick);
+        if (gameState == PLAYING) {
+            Entity.gameObjectRegistry.values().forEach(Entity::tick);
+        }
+        if (gameState == PAUSED) {
+            // Do nothing
+        }
     }
 
     @Override

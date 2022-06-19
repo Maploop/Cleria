@@ -16,8 +16,9 @@ import static me.maploop.cleria.helper.AssetHelper.asset;
 
 public class Player extends Entity
 {
+    public static boolean dontApplyDialogue;
+    public static boolean enterPressed;
     private boolean up, down, left, right;
-    public static int keys;
 
     public Player() {
         super("cleria", (GamePanel.screenWidth / 2) - GamePanel.tileSize / 2, (GamePanel.screenHeight / 2) - GamePanel.tileSize - 2,
@@ -29,10 +30,10 @@ public class Player extends Entity
         this.hitbox.height = 32;
         this.hitboxDefaultX = hitbox.x;
         this.hitboxDefaultY = hitbox.y;
-
-        keys = 0;
+        dontApplyDialogue = false;
     }
 
+    // TODO: MAKE THE ENTER PRESS THING
     @Override
     public void tick() {
         if (up || down || left || right) {
@@ -43,6 +44,12 @@ public class Player extends Entity
             int objectIndex = GamePanel.collisionChecker.checkObject(this, true);
             if (objectIndex != 999)
                 touchObject(objectIndex);
+
+            List<Entity> entities = new ArrayList<>(gameObjectRegistry.values());
+            entities.remove(this);
+            String collided = GamePanel.collisionChecker.checkEntity(this, entities.toArray(new Entity[0]));
+            if (!collided.equals("none"))
+                touchEntity(collided);
 
             if (!collisionOn) {
                 if (up)
@@ -151,37 +158,23 @@ public class Player extends Entity
     public void touchObject(int index) {
         String name = GamePanel.object[index].name;
         switch (name) {
-            case "key":
-                keys++;
-                GamePanel.object[index] = null;
-                GamePanel.playSFX("coin");
-                GamePanel.chat("You got a key!", Color.yellow);
-                break;
-            case "door":
-                if (keys >= 1) {
-                    GamePanel.object[index] = null;
-                    keys--;
-                    GamePanel.chat("Door unlocked!", Color.green);
-                    GamePanel.playSFX("unlock");
-                } else {
-                    GamePanel.chat("You need a key to open this door!", Color.red);
-                }
-                break;
-            case "boots":
-                GamePanel.chat("You found a pair of boots!", Color.cyan);
-                speed += 2;
-                GamePanel.object[index] = null;
-                GamePanel.playSFX("powerup");
-                break;
-            case "chest":
-                UI.gameFinished = true;
-                GamePanel.stopMusic();
-                GamePanel.playSFX("fanfare");
-                break;
         }
     }
 
-    public int getKeys() {
-        return keys;
+    @Override
+    public void touchEntity(String name) {
+        Entity entity = Entity.getByName(name);
+        if (entity.npc) {
+            if (enterPressed) {
+                up = false;
+                down = false;
+                left = false;
+                right = false;
+
+                GamePanel.gameState = GamePanel.DIALOGUE;
+                entity.speak();
+            }
+            enterPressed = false;
+        }
     }
 }

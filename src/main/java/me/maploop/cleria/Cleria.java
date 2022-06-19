@@ -1,5 +1,6 @@
 package me.maploop.cleria;
 
+import me.maploop.cleria.entity.objects.OldManNPC;
 import me.maploop.cleria.entity.objects.Player;
 import me.maploop.cleria.helper.AssetHelper;
 
@@ -51,6 +52,7 @@ public class Cleria
 
     private void registerGameObjects() {
         new Player();
+        new OldManNPC();
     }
 
     public static void main(String[] args) {

@@ -115,6 +115,97 @@ public class CollisionChecker
         return index;
     }
 
+    public String checkEntity(Entity e, Entity[] target) {
+        String index = "none";
+
+        for (int i = 0; i < target.length; i++) {
+            if (target[i] == null) continue;
+            e.hitbox.x = e.worldX + e.hitbox.x;
+            e.hitbox.y = e.worldY + e.hitbox.y;
+            Entity object = target[i];
+            object.hitbox.x = object.worldX + object.hitbox.x;
+            object.hitbox.y = object.worldY + object.hitbox.y;
+
+            switch (e.direction) {
+                case "up":
+                    e.hitbox.y -= e.speed;
+                    if (e.hitbox.intersects(object.hitbox)) {
+                        e.collisionOn = true;
+                        index = target[i].name;
+                    }
+                    break;
+                case "down":
+                    e.hitbox.y += e.speed;
+                    if (e.hitbox.intersects(object.hitbox)) {
+                        e.collisionOn = true;
+                        index = target[i].name;
+                    }
+                    break;
+                case "left":
+                    e.hitbox.x -= e.speed;
+                    if (e.hitbox.intersects(object.hitbox)) {
+                        e.collisionOn = true;
+                        index = target[i].name;
+                    }
+                    break;
+                case "right":
+                    e.hitbox.x += e.speed;
+                    if (e.hitbox.intersects(object.hitbox)) {
+                        e.collisionOn = true;
+                        index = target[i].name;
+                    }
+                    break;
+            }
+
+            e.hitbox.x = e.hitboxDefaultX;
+            e.hitbox.y = e.hitboxDefaultY;
+            object.hitbox.x = object.hitboxDefaultX;
+            object.hitbox.y = object.hitboxDefaultY;
+        }
+
+        return index;
+    }
+
+    public void checkPlayer(Entity e) {
+        e.hitbox.x = e.worldX + e.hitbox.x;
+        e.hitbox.y = e.worldY + e.hitbox.y;
+        Entity object = Entity.getByName("cleria");
+        object.hitbox.x = object.worldX + object.hitbox.x;
+        object.hitbox.y = object.worldY + object.hitbox.y;
+
+        switch (e.direction) {
+            case "up":
+                e.hitbox.y -= e.speed;
+                if (e.hitbox.intersects(object.hitbox)) {
+                    e.collisionOn = true;
+                }
+                break;
+            case "down":
+                e.hitbox.y += e.speed;
+                if (e.hitbox.intersects(object.hitbox)) {
+                    e.collisionOn = true;
+                }
+                break;
+            case "left":
+                e.hitbox.x -= e.speed;
+                if (e.hitbox.intersects(object.hitbox)) {
+                    e.collisionOn = true;
+                }
+                break;
+            case "right":
+                e.hitbox.x += e.speed;
+                if (e.hitbox.intersects(object.hitbox)) {
+                    e.collisionOn = true;
+                }
+                break;
+        }
+
+        e.hitbox.x = e.hitboxDefaultX;
+        e.hitbox.y = e.hitboxDefaultY;
+        object.hitbox.x = object.hitboxDefaultX;
+        object.hitbox.y = object.hitboxDefaultY;
+    }
+
     public void clickMouse(int x, int y) {
         for (SuperObject o : GamePanel.object) {
             if (o == null) continue;
