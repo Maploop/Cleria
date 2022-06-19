@@ -4,7 +4,6 @@ import me.maploop.cleria.GamePanel;
 import me.maploop.cleria.ai.AIGoal;
 import me.maploop.cleria.entity.objects.Player;
 import me.maploop.cleria.helper.AssetHelper;
-import me.maploop.cleria.object.SuperObject;
 import me.maploop.cleria.ui.DialogueUI;
 
 import java.awt.*;
@@ -15,6 +14,7 @@ import java.util.List;
 public abstract class Entity
 {
     public static final Map<String, Entity> gameObjectRegistry = new HashMap<>();
+    public static final List<Entity> entityList = new ArrayList<>();
 
     public final String name;
     public int x, y;
@@ -29,6 +29,8 @@ public abstract class Entity
     public int spriteNum;
     public Rectangle hitbox = new Rectangle(0, 0, 48, 48);
     public boolean collisionOn = false;
+    public boolean invincible = false;
+    public int invincibleCounter = 0;
     public boolean npc;
     public List<String> dialogues;
     public int dialogueIndex;
@@ -44,11 +46,12 @@ public abstract class Entity
         this.worldX = worldX;
         this.worldY = worldY;
         this.speed = speed;
-        getImage();
+        initImage();
         direction = "down";
         spriteCounter = 0;
         spriteNum = 1;
         gameObjectRegistry.put(name, this);
+        entityList.add(this);
         npc = false;
         this.goalSelector = new ArrayList<>();
         this.dialogues = new ArrayList<>();
@@ -102,7 +105,7 @@ public abstract class Entity
 
     public void keyPressed(int code) { }
     public void keyReleased(int code) { }
-    public void getImage() { }
+    public void initImage() { }
     public void touchObject(int index) { }
     public void touchEntity(String name) { }
     public void initAI() { }
@@ -117,7 +120,15 @@ public abstract class Entity
         collisionOn = false;
         GamePanel.collisionChecker.checkTile(this);
         GamePanel.collisionChecker.checkObject(this, false);
-        GamePanel.collisionChecker.checkPlayer(this);
+//        GamePanel.collisionChecker.checkEntity(this, Entity.entityList.toArray(new Entity[0]));
+        if (GamePanel.collisionChecker.checkPlayer(this)) {
+            if (this instanceof MonsterEntity) {
+                if (!GamePanel.player.invincible) {
+                    GamePanel.player.statistic_health -= 1;
+                    GamePanel.player.invincible = true;
+                }
+            }
+        }
 
         if (!collisionOn) {
             if (direction.equals("up"))

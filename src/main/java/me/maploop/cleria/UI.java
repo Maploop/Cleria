@@ -47,7 +47,7 @@ public class UI
         g2d.setFont(arial40);
         g2d.setColor(Color.white);
 
-        if (GamePanel.gameState == GamePanel.PLAYING) {
+        if (GamePanel.gameState == GameState.PLAYING) {
             // HUD
 
             drawPlayerLife();
@@ -81,7 +81,7 @@ public class UI
         while (i < GamePanel.player.statistic_health) {
             g2d.drawImage(heart.image1, x, y, null);
             i++;
-            if (i <= GamePanel.player.statistic_health) {
+            if (i < GamePanel.player.statistic_health) {
                 g2d.drawImage(heart.image, x, y, null);
             }
             i++;

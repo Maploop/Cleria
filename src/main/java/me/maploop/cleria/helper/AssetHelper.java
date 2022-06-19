@@ -2,6 +2,7 @@ package me.maploop.cleria.helper;
 
 import me.maploop.cleria.GamePanel;
 import me.maploop.cleria.entity.Entity;
+import me.maploop.cleria.entity.objects.SlimeMob;
 import me.maploop.cleria.object.objects.BootsObj;
 import me.maploop.cleria.object.objects.ChestObj;
 import me.maploop.cleria.object.objects.DoorObj;
@@ -29,5 +30,13 @@ public class AssetHelper
     public static void setObject() {
         Entity.getByName("oldman").worldX = GeneralHelper.getWorldPos(21);
         Entity.getByName("oldman").worldY = GeneralHelper.getWorldPos(21);
+
+        GamePanel.mobs[0] = new SlimeMob();
+        GamePanel.mobs[0].worldX = GeneralHelper.getWorldPos(23);
+        GamePanel.mobs[0].worldY = GeneralHelper.getWorldPos(36);
+
+        GamePanel.mobs[0] = new SlimeMob();
+        GamePanel.mobs[0].worldX = GeneralHelper.getWorldPos(23);
+        GamePanel.mobs[0].worldY = GeneralHelper.getWorldPos(36);
     }
 }

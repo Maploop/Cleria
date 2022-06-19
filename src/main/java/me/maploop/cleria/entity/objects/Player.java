@@ -1,8 +1,11 @@
 package me.maploop.cleria.entity.objects;
 
+import me.maploop.cleria.Cleria;
 import me.maploop.cleria.GamePanel;
+import me.maploop.cleria.GameState;
 import me.maploop.cleria.UI;
 import me.maploop.cleria.entity.Entity;
+import me.maploop.cleria.entity.MonsterEntity;
 import me.maploop.cleria.item.Item;
 import me.maploop.cleria.object.SuperObject;
 
@@ -11,6 +14,8 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static me.maploop.cleria.helper.AssetHelper.asset;
 
@@ -45,11 +50,14 @@ public class Player extends Entity
             if (objectIndex != 999)
                 touchObject(objectIndex);
 
-            List<Entity> entities = new ArrayList<>(gameObjectRegistry.values());
+            List<Entity> entities = new ArrayList<>(entityList);
             entities.remove(this);
             String collided = GamePanel.collisionChecker.checkEntity(this, entities.toArray(new Entity[0]));
             if (!collided.equals("none"))
                 touchEntity(collided);
+
+            GamePanel.eventHandler.checkEvent();
+            enterPressed = false;
 
             if (!collisionOn) {
                 if (up)
@@ -70,6 +78,14 @@ public class Player extends Entity
                     spriteNum = 1;
 
                 spriteCounter = 0;
+            }
+        }
+
+        if (invincible) {
+            invincibleCounter++;
+            if (invincibleCounter >= 60) {
+                invincible = false;
+                invincibleCounter = 0;
             }
         }
     }
@@ -108,10 +124,13 @@ public class Player extends Entity
         if (code == KeyEvent.VK_D) {
             right = false;
         }
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = false;
+        }
     }
 
     @Override
-    public void getImage() {
+    public void initImage() {
         up1 = asset("/assets/entity/player/boy_up_1.png");
         up2 = asset("/assets/entity/player/boy_up_2.png");
         down1 = asset("/assets/entity/player/boy_down_1.png");
@@ -152,6 +171,12 @@ public class Player extends Entity
                 break;
         }
         g2d.drawImage(image, getX(), getY(), GamePanel.tileSize, GamePanel.tileSize, null);
+
+        if (Cleria.debugMode) {
+            g2d.setFont(new Font("Arial", Font.PLAIN, 26));
+            g2d.setColor(Color.white);
+            g2d.drawString("Invincible Counter: " + invincibleCounter, 10, 400);
+        }
     }
 
     @Override
@@ -176,10 +201,15 @@ public class Player extends Entity
                 left = false;
                 right = false;
 
-                GamePanel.gameState = GamePanel.DIALOGUE;
+                GamePanel.gameState = GameState.DIALOGUE;
                 entity.speak();
             }
-            enterPressed = false;
+        }
+        if (entity instanceof MonsterEntity) {
+            if (!invincible) {
+                statistic_health -= 1;
+                invincible = true;
+            }
         }
     }
 }

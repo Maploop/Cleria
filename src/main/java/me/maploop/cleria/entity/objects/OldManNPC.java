@@ -25,7 +25,7 @@ public class OldManNPC extends Entity
     }
 
     @Override
-    public void getImage() {
+    public void initImage() {
         up1 = defaultAsset("/npc/oldman_up_1");
         up2 = defaultAsset("/npc/oldman_up_2");
         down1 = defaultAsset("/npc/oldman_down_1");

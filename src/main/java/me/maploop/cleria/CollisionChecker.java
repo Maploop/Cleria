@@ -166,7 +166,8 @@ public class CollisionChecker
         return index;
     }
 
-    public void checkPlayer(Entity e) {
+    public boolean checkPlayer(Entity e) {
+        boolean c = false;
         e.hitbox.x = e.worldX + e.hitbox.x;
         e.hitbox.y = e.worldY + e.hitbox.y;
         Entity object = Entity.getByName("cleria");
@@ -176,34 +177,29 @@ public class CollisionChecker
         switch (e.direction) {
             case "up":
                 e.hitbox.y -= e.speed;
-                if (e.hitbox.intersects(object.hitbox)) {
-                    e.collisionOn = true;
-                }
                 break;
             case "down":
                 e.hitbox.y += e.speed;
-                if (e.hitbox.intersects(object.hitbox)) {
-                    e.collisionOn = true;
-                }
                 break;
             case "left":
                 e.hitbox.x -= e.speed;
-                if (e.hitbox.intersects(object.hitbox)) {
-                    e.collisionOn = true;
-                }
                 break;
             case "right":
                 e.hitbox.x += e.speed;
-                if (e.hitbox.intersects(object.hitbox)) {
-                    e.collisionOn = true;
-                }
                 break;
+        }
+
+        if (e.hitbox.intersects(object.hitbox)) {
+            e.collisionOn = true;
+            c = true;
         }
 
         e.hitbox.x = e.hitboxDefaultX;
         e.hitbox.y = e.hitboxDefaultY;
         object.hitbox.x = object.hitboxDefaultX;
         object.hitbox.y = object.hitboxDefaultY;
+
+        return c;
     }
 
     public void clickMouse(int x, int y) {

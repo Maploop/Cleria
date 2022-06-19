@@ -1,6 +1,7 @@
 package me.maploop.cleria;
 
 import me.maploop.cleria.entity.objects.Player;
+import me.maploop.cleria.event.EventHandler;
 import me.maploop.cleria.helper.AssetHelper;
 import me.maploop.cleria.helper.ChatComponent;
 import me.maploop.cleria.key.KeyHandler;
@@ -48,17 +49,13 @@ public class GamePanel extends JPanel implements Runnable
     public static CollisionChecker collisionChecker = new CollisionChecker();
     public static TileManager tileManager = new TileManager();
     public static SuperObject object[] = new SuperObject[10];
+    public static Entity mobs[] = new Entity[20];
     public static UI ui = new UI();
+    public static EventHandler eventHandler = new EventHandler();
     public static int gameState;
 
     public static boolean chatOpen = false;
     public static String chatMessage = "";
-
-    public static final int PLAYING = 1;
-    public static final int PAUSED = 2;
-    public static final int DIALOGUE = 3;
-    public static final int TITLE_SCREEN = 0;
-    public static final int NOTICE = 999;
 
     public static final Player player = (Player) Entity.getByName("cleria");
 
@@ -85,7 +82,7 @@ public class GamePanel extends JPanel implements Runnable
         new TitleScreenUI();
         new NoticeUI();
 
-        gameState = TITLE_SCREEN;
+        gameState = GameState.TITLE_SCREEN;
     }
 
     @Override
@@ -128,10 +125,10 @@ public class GamePanel extends JPanel implements Runnable
     }
 
     public void update() {
-        if (gameState == PLAYING) {
-            Entity.gameObjectRegistry.values().forEach(Entity::tick);
+        if (gameState == GameState.PLAYING) {
+            Entity.entityList.forEach(Entity::tick);
         }
-        if (gameState == PAUSED) {
+        if (gameState == GameState.PAUSED) {
             // Do nothing
         }
     }
@@ -141,13 +138,13 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         // Title Screen
-        if (gameState == TITLE_SCREEN || gameState == NOTICE) {
+        if (gameState == GameState.TITLE_SCREEN || gameState == GameState.NOTICE) {
             ui.draw(g2d);
             return;
         }
 
         tileManager.draw(g2d);
-        Entity.gameObjectRegistry.values().forEach(e -> e.draw(g2d));
+        Entity.entityList.forEach(e -> e.draw(g2d));
         for (SuperObject objects : object) {
             if (objects == null) continue;
             objects.draw(g2d);

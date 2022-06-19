@@ -1,6 +1,7 @@
 package me.maploop.cleria.key;
 
 import me.maploop.cleria.GamePanel;
+import me.maploop.cleria.GameState;
 import me.maploop.cleria.entity.Entity;
 import me.maploop.cleria.entity.objects.Player;
 import me.maploop.cleria.ui.NoticeUI;
@@ -24,7 +25,7 @@ public class KeyHandler implements KeyListener
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-        if (GamePanel.gameState == GamePanel.TITLE_SCREEN) {
+        if (GamePanel.gameState == GameState.TITLE_SCREEN) {
             if (e.getKeyCode() == KeyEvent.VK_W) {
                 if (TitleScreenUI.commandNum < 0) {
                     TitleScreenUI.commandNum = 2;
@@ -45,14 +46,14 @@ public class KeyHandler implements KeyListener
                 }
                 switch (TitleScreenUI.commandNum) {
                     case 0:
-                        GamePanel.gameState = GamePanel.PLAYING;
+                        GamePanel.gameState = GameState.PLAYING;
                         GamePanel.playMusic("cleria");
                         break;
                     case 1:
                         NoticeUI.noticeMessage = "This feature is not finished yet. \nPlease wait for the next update.";
                         NoticeUI.noticeColor = Color.yellow;
                         int previousState = GamePanel.gameState;
-                        GamePanel.gameState = GamePanel.NOTICE;
+                        GamePanel.gameState = GameState.NOTICE;
                         new Timer().schedule(new TimerTask()
                         {
                             @Override
@@ -68,8 +69,8 @@ public class KeyHandler implements KeyListener
             }
             return;
         }
-        if (!GamePanel.chatOpen && (GamePanel.gameState == GamePanel.PLAYING))
-            Entity.gameObjectRegistry.values().forEach(v -> v.keyPressed(code));
+        if (!GamePanel.chatOpen && (GamePanel.gameState == GameState.PLAYING))
+            Entity.entityList.forEach(v -> v.keyPressed(code));
 
         if (e.getKeyCode() == 8) {
             if (GamePanel.chatOpen) {
@@ -84,7 +85,7 @@ public class KeyHandler implements KeyListener
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             Player.enterPressed = true;
         }
-        if (e.getKeyCode() == KeyEvent.VK_T && GamePanel.gameState == GamePanel.PLAYING) {
+        if (e.getKeyCode() == KeyEvent.VK_T && GamePanel.gameState == GameState.PLAYING) {
             if (GamePanel.chatOpen) {
                 if (GamePanel.chatMessage != "") {
                     GamePanel.chat("<Player> " + GamePanel.chatMessage);
@@ -95,9 +96,9 @@ public class KeyHandler implements KeyListener
                 GamePanel.chatOpen = true;
             }
         }
-        if (GamePanel.gameState == GamePanel.DIALOGUE) {
+        if (GamePanel.gameState == GameState.DIALOGUE) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                GamePanel.gameState = GamePanel.PLAYING;
+                GamePanel.gameState = GameState.PLAYING;
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -105,10 +106,10 @@ public class KeyHandler implements KeyListener
                 GamePanel.chatOpen = false;
                 return;
             }
-            if (GamePanel.gameState == GamePanel.PAUSED || GamePanel.gameState == GamePanel.DIALOGUE) {
-                GamePanel.gameState = GamePanel.PLAYING;
+            if (GamePanel.gameState == GameState.PAUSED || GamePanel.gameState == GameState.DIALOGUE) {
+                GamePanel.gameState = GameState.PLAYING;
             } else {
-                GamePanel.gameState = GamePanel.PAUSED;
+                GamePanel.gameState = GameState.PAUSED;
             }
         }
     }
@@ -116,7 +117,7 @@ public class KeyHandler implements KeyListener
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
-        if (!GamePanel.chatOpen && (GamePanel.gameState == GamePanel.PLAYING))
-            Entity.gameObjectRegistry.values().forEach(v -> v.keyReleased(code));
+        if (!GamePanel.chatOpen && (GamePanel.gameState == GameState.PLAYING))
+            Entity.entityList.forEach(v -> v.keyReleased(code));
     }
 }

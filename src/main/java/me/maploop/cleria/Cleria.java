@@ -11,6 +11,8 @@ import java.awt.event.MouseEvent;
 
 public class Cleria
 {
+    public static boolean debugMode = false;
+
     public Cleria() {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
