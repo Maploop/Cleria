@@ -49,9 +49,9 @@ public class OldManNPC extends Entity
     @Override
     public void initDialogue() {
         this.dialogues.add("Hello, lad!");
-        this.dialogues.add("So you've come to this island to find the treasure, eh?");
-        this.dialogues.add("I'm sure you've heard of it, but I'm not sure what it is.");
-        this.dialogues.add("I used to be a great wizard, but now I'm too old \nto take on any more challenges.");
+        this.dialogues.add("So you've come to this island to find the \ntreasure, eh?");
+        this.dialogues.add("I'm sure you've heard of it, but I'm not \nsure what it is.");
+        this.dialogues.add("I used to be a great wizard, but \nnow I'm too old to take on any \nmore challenges.");
         this.dialogues.add("Well, good luck young adventurer!");
     }
 

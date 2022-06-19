@@ -33,6 +33,10 @@ public abstract class Entity
     public List<String> dialogues;
     public int dialogueIndex;
 
+    // Statistics
+    public int statistic_maxHealth;
+    public int statistic_health;
+
     public Entity(String name, int x, int y, int worldX, int worldY, int speed) {
         this.name = name;
         this.x = x;
@@ -52,6 +56,8 @@ public abstract class Entity
 
         initAI();
         initDialogue();
+        initStatistics();
+        statistic_health = statistic_maxHealth;
     }
 
     public void draw(Graphics2D g2d) {
@@ -101,6 +107,7 @@ public abstract class Entity
     public void touchEntity(String name) { }
     public void initAI() { }
     public void initDialogue() { }
+    public void initStatistics() { }
 
     public void tick() {
         for (AIGoal goal : goalSelector) {

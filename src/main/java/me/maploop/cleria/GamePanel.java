@@ -1,14 +1,13 @@
 package me.maploop.cleria;
 
+import me.maploop.cleria.entity.objects.Player;
 import me.maploop.cleria.helper.AssetHelper;
 import me.maploop.cleria.helper.ChatComponent;
 import me.maploop.cleria.key.KeyHandler;
 import me.maploop.cleria.entity.Entity;
 import me.maploop.cleria.object.SuperObject;
 import me.maploop.cleria.tile.TileManager;
-import me.maploop.cleria.ui.DialogueUI;
-import me.maploop.cleria.ui.GameUI;
-import me.maploop.cleria.ui.PausedUI;
+import me.maploop.cleria.ui.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,6 +57,10 @@ public class GamePanel extends JPanel implements Runnable
     public static final int PLAYING = 1;
     public static final int PAUSED = 2;
     public static final int DIALOGUE = 3;
+    public static final int TITLE_SCREEN = 0;
+    public static final int NOTICE = 999;
+
+    public static final Player player = (Player) Entity.getByName("cleria");
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -75,12 +78,14 @@ public class GamePanel extends JPanel implements Runnable
 
     public void setupGameObjects() {
         AssetHelper.setObject();
-        playMusic("cleria");
+//        playMusic("cleria");
 
         new PausedUI();
         new DialogueUI();
+        new TitleScreenUI();
+        new NoticeUI();
 
-        gameState = PLAYING;
+        gameState = TITLE_SCREEN;
     }
 
     @Override
@@ -135,6 +140,12 @@ public class GamePanel extends JPanel implements Runnable
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+        // Title Screen
+        if (gameState == TITLE_SCREEN || gameState == NOTICE) {
+            ui.draw(g2d);
+            return;
+        }
+
         tileManager.draw(g2d);
         Entity.gameObjectRegistry.values().forEach(e -> e.draw(g2d));
         for (SuperObject objects : object) {

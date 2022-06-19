@@ -155,6 +155,11 @@ public class Player extends Entity
     }
 
     @Override
+    public void initStatistics() {
+        statistic_maxHealth = 6;
+    }
+
+    @Override
     public void touchObject(int index) {
         String name = GamePanel.object[index].name;
         switch (name) {
